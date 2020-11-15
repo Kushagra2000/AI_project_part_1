@@ -3,6 +3,17 @@ class Kruskal:
         #initializing number of vertices and empty list for graph edges
         self.V=vertices
         self.adj_list=[]
+        self.adj_mat_mst=[[0 for i in range(vertices)] for j in range(vertices)]
+        self.vis={}
+
+
+    def dfs(self,start):                                      # perform dfs 
+        self.vis[start]=True
+        print(start,end=" ")
+        for i,w in enumerate(self.adj_mat_mst[start]):
+            if(w!=0 and i not in self.vis):
+                self.vis[i]=True
+                self.dfs(i)
 
     def makeMST(self):
         rank=[]
@@ -28,9 +39,13 @@ class Kruskal:
                 self.combine(par,rank,set1,set2)                                   
                 cov_edges+=1
                 mst.append([u,v,w])
-        for u,v,wt in mst:
+        for u,v,wt in mst:          #making the adjacency matrix of the mst
             print("MST Edge between vertices %d and %d has weight: %d" % (u,v,wt))
-
+            self.adj_mat_mst[u][v]=wt
+            self.adj_mat_mst[v][u]=wt
+        print("The path to be followed is:")
+        self.dfs(0)                 #performing dfs
+        print(0,end=" ")
 
     def belongs_to(self,par,i):
         #finds the set which contains vertex i
@@ -71,7 +86,7 @@ if __name__ == "__main__":
     for i in range(num_edge):
         u=int(input("Enter 1st vertex:"))
         v=int(input("Enter 2nd vertex:"))
-        wt=int(input("Enter weight:"))
+        wt=int(input("Enter edge weight:"))
         g.addedge(u,v,wt)
 
     g.makeMST()         #calling the method that implements kruskal algorithm to make the MST
