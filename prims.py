@@ -1,14 +1,24 @@
 import sys
 
+
+def dfs(start,vis,adj_mat):                 # code for dfs
+    vis[start]=True
+    print(start,end=" ")
+    for i,w in enumerate(adj_mat[start]):
+        if(w!=0 and i not in vis):
+            vis[i]=True
+            dfs(i,vis,adj_mat)
+
 p=sys.maxsize   #a very large positive number
 num_ver=int(input("Enter number of vertices:"))
-adj_mat=[[0 for i in range(num_ver)] for j in range(num_ver)]   #initializing adjacency matrix with 0s
+adj_mat=[[0 for i in range(num_ver)] for j in range(num_ver)]   #initializing adjacency matrix of graph with 0s
 fringe=[False for i in range(num_ver)] #denotes the vertices on the fringe
 num_edge=int(input("Enter number of edges:"))
+adj_mat_mst=[[0 for i in range(num_ver)] for j in range(num_ver)]   #initializing adjacency matrix of MST with 0s
 for i in range(num_edge):           # making the adjacency matrix
     u=int(input("Enter 1st vertex:"))
     v=int(input("Enter 2nd vertex:"))
-    wt=int(input("Enter weight:"))
+    wt=int(input("Enter edge weight:"))
     adj_mat[u][v]=wt
     adj_mat[v][u]=wt
 cov_edges=0
@@ -27,4 +37,11 @@ while(cov_edges<num_ver-1): #for MST to be fully connected we must have num_ver-
                         end=j
     cov_edges+=1    #increment the number of edges in MST
     fringe[end]=True   #adding the new terminal node to the fringe
-    print("Edge between vertex ",start," and vertex ",end," has weight:",adj_mat[start][end])
+    print("Edge between vertex ",start," and vertex ",end," has weight:",adj_mat[start][end])   #adjacency matrix for MST
+    adj_mat_mst[start][end]=adj_mat[start][end]
+    adj_mat_mst[end][start]=adj_mat[start][end]
+
+vis={}
+print("Path to be followed is: ")
+dfs(0,vis,adj_mat_mst)  #performing dfs on MST
+print(0,end=" ")
